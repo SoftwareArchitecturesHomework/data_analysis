@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Manager Report – {{ manager_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        h1, h2 {
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        h2 {
+            page-break-after: avoid;
+            margin-top: 0.5cm;
+            margin-bottom: 0.2cm;
+        }
+        .section {
+            margin-top: 40px;
+        }
+        .chart {
+            margin: 20px 0;
+            text-align: center;
+        }
+        img {
+            max-width: 90%;
+            height: auto;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        table {
+            border-collapse: collapse;
+            break-inside: avoid;
+            width: 100%;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px 8px;
+            text-align: left;
+        }
+        th {
+            background: #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>Manager Report</h1>
+<h2>{{ manager_name }}</h2>
+<hr>
+
+<!-- Monthly Hours Chart -->
+{% if charts.monthly_hours %}
+<div class="section">
+    <h2>Monthly Hours</h2>
+    <div class="chart">
+        <img src="{{ charts.monthly_hours }}">
+    </div>
+</div>
+{% endif %}
+
+<!-- Duration Variance Chart -->
+{% if charts.duration_variance %}
+<div class="section">
+    <h2>Project Duration Variance</h2>
+    <div class="chart">
+        <img src="{{ charts.duration_variance }}">
+    </div>
+</div>
+{% endif %}
+
+<!-- Employee Hours Chart -->
+{% if charts.employee_hours %}
+<div class="section">
+    <h2>Employee Hours per Project</h2>
+    <div class="chart">
+        <img src="{{ charts.employee_hours }}">
+    </div>
+</div>
+{% endif %}
+
+<!-- Table: Average Duration -->
+<div class="section">
+    <h2>Average Completed Project Duration</h2>
+
+    {% if avg_duration %}
+    <p><strong>{{ avg_duration.averageProjectDurationDays }}</strong> days on average.</p>
+    {% else %}
+    <p>No completed projects.</p>
+    {% endif %}
+</div>
+
+<!-- Table: Project Duration Variance -->
+<div class="section">
+    <h2>Project Duration Variance (Days)</h2>
+    {% if variance %}
+    <table>
+        <tr>
+            <th>Project</th>
+            <th>Planned</th>
+            <th>Actual</th>
+            <th>Variance</th>
+        </tr>
+        {% for row in variance %}
+        <tr>
+            <td>{{ row.projectName }}</td>
+            <td>{{ row.plannedDurationDays }}</td>
+            <td>{{ row.actualDurationDays }}</td>
+            <td>{{ row.durationVarianceDays }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No variance data available.</p>
+    {% endif %}
+</div>
+
+<!-- Table: Monthly Hours -->
+<div class="section">
+    <h2>Monthly Hours by Project</h2>
+    {% if monthly %}
+    <table>
+        <tr>
+            <th>Month</th>
+            <th>Project</th>
+            <th>Total Hours</th>
+        </tr>
+        {% for row in monthly %}
+        <tr>
+            <td>{{ row.month }}</td>
+            <td>{{ row.projectName }}</td>
+            <td>{{ row.totalMonthlyHours }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No monthly data available.</p>
+    {% endif %}
+</div>
+
+<!-- Table: Employee Hours -->
+<div class="section">
+    <h2>Employee Total Hours per Project</h2>
+    {% if project_hours %}
+    <table>
+        <tr>
+            <th>Project</th>
+            <th>Employee</th>
+            <th>Total Hours</th>
+        </tr>
+        {% for row in project_hours %}
+        <tr>
+            <td>{{ row.projectName }}</td>
+            <td>{{ row.userName }}</td>
+            <td>{{ row.totalHours }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No employee hour data available.</p>
+    {% endif %}
+</div>
+
+</body>
+</html>

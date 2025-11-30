@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package server.generated;
+
+message ManagerRequest {
+  int64 manager_id = 1;
+}
+
+message HTMLResponse {
+  string html = 1;
+}
+
+message PDFResponse {
+  bytes pdf = 1;
+}
+
+message Chart {
+  string filename = 1;
+  string title = 2;
+  bytes data = 3;
+}
+
+message ManagerReport {
+  int64 manager_id = 1;
+  string manager_name = 2;
+  string html = 3;
+  bytes pdf = 4;
+  repeated Chart charts = 5;
+}
+
+message AllReportsResponse {
+  repeated ManagerReport reports = 1;
+}
+
+message EmptyRequest {}
+
+service ReportService {
+  rpc GetManagerHTML (ManagerRequest) returns (HTMLResponse);
+
+  rpc GetManagerPDF (ManagerRequest) returns (PDFResponse);
+
+  rpc GetAllReportsOfManager (ManagerRequest) returns (AllReportsResponse);
+
+  rpc GetAllManagerReports (EmptyRequest) returns (AllReportsResponse);
+}
