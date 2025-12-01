@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     pdf_path: str
     api_key: str
     grpc_host: str
-    grpc_port: str
+    grpc_port: int
     msys2_dll_path: str
 
     class Config:
