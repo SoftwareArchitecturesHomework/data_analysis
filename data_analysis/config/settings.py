@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     api_key: str
     grpc_host: str
     grpc_port: str
+    msys2_dll_path: str
 
     class Config:
         env_file = ".env"

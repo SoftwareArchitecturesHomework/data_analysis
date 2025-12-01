@@ -1,4 +1,7 @@
+import base64
 from datetime import datetime
+from pathlib import Path
+from urllib.parse import urlparse
 
 from config.settings import settings
 from dto.report_dto import ReportDTO
@@ -17,6 +20,7 @@ from data.queries import (
     fetch_manager
 )
 
+
 def generate_manager_report(manager_id: int):
 
     manager_name = fetch_manager(manager_id)
@@ -28,13 +32,34 @@ def generate_manager_report(manager_id: int):
 
     charts = generate_all_charts(df_hours, df_variance, df_monthly, manager_id)
 
+    base64_charts = {}
+
+    for key, path in charts.items():
+        if not path:
+            continue
+        try:
+            parsed_uri = urlparse(path)
+            path_segment = parsed_uri.path
+            local_path = Path(path_segment[1:])
+            with open(local_path, "rb") as fh:
+                data = fh.read()
+        except Exception:
+            data = ""
+
+        if data:
+            # Convert raw bytes (data) into a Base64 string (bytes)
+            base64_string = base64.b64encode(data).decode('utf-8')
+        else:
+            base64_string = b""
+        base64_charts[key] = base64_string
+
     html = generate_html_report(
         manager_name=manager_name,
         project_hours_df=df_hours,
         avg_duration_df=df_avg,
         variance_df=df_variance,
         monthly_df=df_monthly,
-        charts=charts
+        charts=base64_charts
     )
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

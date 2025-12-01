@@ -2,7 +2,7 @@ import logging
 import os
 from pathlib import Path
 from urllib.parse import urlparse
-from urllib.request import url2pathname
+import base64
 
 from config.settings import settings
 from data.queries import fetch_manager, fetch_all_manager_ids
@@ -72,11 +72,20 @@ class ReportServiceServicer(report_pb2_grpc.ReportServiceServicer):
             except Exception:
                 logger.exception("Failed to read chart file %s", path)
                 data = b""
+
+            if data:
+                # Convert raw bytes (data) into a Base64 string (bytes)
+                base64_data = base64.b64encode(data)
+            else:
+                base64_data = b""
+            # ----------------------------------------------
+
             charts_out.append(
                 report_pb2.Chart(
                     filename=path.split("/")[-1],
                     title=key,
-                    data=data
+                    # Pass the Base64 bytes to the Protobuf message
+                    data=base64_data
                 )
             )
 
