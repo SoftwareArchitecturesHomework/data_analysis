@@ -40,7 +40,8 @@ def generate_manager_report(manager_id: int):
         try:
             parsed_uri = urlparse(path)
             path_segment = parsed_uri.path
-            local_path = Path(path_segment[1:])
+            # Keep the leading slash for absolute paths
+            local_path = Path(path_segment) if path_segment.startswith('/') else Path(path_segment[1:])
             with open(local_path, "rb") as fh:
                 data = fh.read()
         except Exception:
