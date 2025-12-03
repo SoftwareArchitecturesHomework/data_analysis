@@ -64,7 +64,8 @@ def generate_manager_report(manager_id: int):
     )
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    pdf_path = settings.pdf_path + f"/manager_{manager_id}_{timestamp}.pdf"
+    file_name = f"/manager_{manager_id}_{timestamp}.pdf"
+    pdf_path = settings.pdf_path + file_name
 
     generate_pdf_from_html(html, pdf_path)
 
@@ -73,5 +74,6 @@ def generate_manager_report(manager_id: int):
         manager_name=manager_name,
         html=html,
         pdf_path=str(pdf_path),
-        charts=charts
+        charts=charts,
+        file_name=file_name
     )

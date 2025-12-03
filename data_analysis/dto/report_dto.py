@@ -9,3 +9,4 @@ class ReportDTO:
     html: str
     pdf_path: Optional[str]
     charts: Dict[str, str]
+    file_name: str

@@ -47,9 +47,9 @@ async def get_manager_pdf(manager_id: int, credentials: HTTPAuthorizationCredent
         )
 
     try:
-        generate_manager_report(manager_id)
+        response = generate_manager_report(manager_id)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        file_name = f"/manager_{manager_id}_{timestamp}.pdf"
+        file_name = response.file_name
         pdf_path = settings.pdf_path + file_name
 
         return FileResponse(pdf_path, filename=file_name, media_type='application/pdf')
